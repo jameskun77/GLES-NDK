@@ -3,8 +3,7 @@
 #include <android/log.h>
 #include <android/asset_manager_jni.h>
 
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
+#include <GLES3/gl3.h>
 
 #include <string>
 #include <string.h>
@@ -69,11 +68,9 @@ public:
         glLinkProgram(mProgram);
 
         _checkCompileError(mProgram,"PROGRAM");
-    }
 
-    int getProgramID()
-    {
-        return mProgram;
+        glDeleteShader(vertex);
+        glDeleteShader(fragment);
     }
 
     void use()
@@ -121,17 +118,24 @@ private:
     void _checkCompileError(unsigned int shader,std::string type)
     {
         GLint compiled;
-        glGetShaderiv(shader,GL_COMPILE_STATUS,&compiled);
-
-        if(!compiled)
+        GLchar infoLog[1024];
+        if(type != "PROGRAM")
         {
-            std::string errorTip = type + " Error";
-            GLsizei len;
-            glGetShaderiv(shader,GL_INFO_LOG_LENGTH,&len);
-            GLchar* log = new GLchar[len + 1];
-            glGetShaderInfoLog(shader,len,&len,log);
-            SHADER_LOGE("%s: %s\n",errorTip.c_str(),log);
-            delete []log;
+            glGetShaderiv(shader,GL_COMPILE_STATUS,&compiled);
+            if(!compiled)
+            {
+                glGetShaderInfoLog(shader,1024,NULL,infoLog);
+                SHADER_LOGE("Shader error: %s\n",infoLog);
+            }
+        }
+        else
+        {
+            glGetProgramiv(shader,GL_LINK_STATUS,&compiled);
+            if(!compiled)
+            {
+                glGetShaderInfoLog(shader,1024,NULL,infoLog);
+                SHADER_LOGE("Program error: %s\n",infoLog);
+            }
         }
     }
 
