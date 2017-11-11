@@ -18,7 +18,7 @@ protected:
 public:
     static RenderEngine& GetInstance();
 
-public:
+private:
     RenderEngine();
     ~RenderEngine();
 
