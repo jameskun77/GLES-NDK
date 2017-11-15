@@ -32,9 +32,19 @@ public class TextureBlendRender implements GLSurfaceView.Renderer {
     private final Context context;
     private int[] textureID = new int[1];
 
+    private Bitmap bitmap;
+    private int col;
+    private int row;
+    int[] pix;
+
+
     public TextureBlendRender(Context context)
     {
         this.context = context;
+        bitmap = loadBitmap(context,R.drawable.wall);
+        col = bitmap.getWidth();
+        row = bitmap.getHeight();
+        pix = new int[col * row];
     }
 
     public void onDrawFrame(GL10 gl)
@@ -44,10 +54,18 @@ public class TextureBlendRender implements GLSurfaceView.Renderer {
 
     public void onSurfaceChanged(GL10 gl, int width, int height)
     {
+        //JNILib.setTextureData(col,row,pix);
         JNILib.init(width, height,context.getResources().getAssets());
     }
 
     public void onSurfaceCreated(GL10 gl, EGLConfig config)
+    {
+        //setTextureObjID();
+        //bitmap.getPixels(pix,0,col,0,0,col,row);
+        JNILib.setTextureBimap(bitmap);
+    }
+
+    private void setTextureObjID() //设置纹理ID的方式
     {
         Bitmap bitmap = loadBitmap(context,R.drawable.wall);
 
@@ -80,7 +98,7 @@ public class TextureBlendRender implements GLSurfaceView.Renderer {
         final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),resID,options);
 
         if (bitmap == null) {
-           Log.e("loadBitmap","loadBitmap failed!");
+           Log.e(TAG,"loadBitmap failed!");
         }
 
         return  bitmap;

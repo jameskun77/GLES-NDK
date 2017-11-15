@@ -6,8 +6,6 @@
 #include "Shader.h"
 #include "Utility.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
 
 #define  RenderEngine_TAG  "InitEngine"
 #define  Render_LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,RenderEngine_TAG,__VA_ARGS__)
@@ -142,4 +140,24 @@ void RenderEngine::setTexture(unsigned int textureID)
     auto& imp_ = *mImpUPtr;
 
     imp_.mTexture1 = textureID;
+}
+
+void RenderEngine::createTexture(unsigned char* pData,int w,int h)
+{
+    auto& imp_ = *mImpUPtr;
+
+    glGenTextures(1, &imp_.mTexture1);
+    glBindTexture(GL_TEXTURE_2D, imp_.mTexture1);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    if (pData)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pData);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
 }

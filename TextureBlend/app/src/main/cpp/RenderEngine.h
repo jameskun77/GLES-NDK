@@ -26,6 +26,7 @@ public:
     bool setupGraphics(int w,int h,AAssetManager* assetMgr);
     void renderFrame();
     void setTexture(unsigned int textureID);
+    void createTexture(unsigned char* pData,int w,int h);
 };
 
 #endif //TEXTUREBLEND_RENDERENGINE_H

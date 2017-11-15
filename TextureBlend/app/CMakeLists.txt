@@ -13,4 +13,5 @@ target_link_libraries(jinlib
                       android
                       log
                       EGL
-                      GLESv3)
+                      GLESv3
+                      jnigraphics)
